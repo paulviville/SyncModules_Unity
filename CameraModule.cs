@@ -34,6 +34,8 @@ public class CameraModule : TransformModule
 		double? aspect = data.TryGetProperty("aspect", out var a) ? a.GetDouble() : null;
 		double? near = data.TryGetProperty("near", out var n) ? n.GetDouble() : null;
 		double? far = data.TryGetProperty("far", out var ff) ? ff.GetDouble() : null;
+	
+		UpdateCamera( new CameraData( fov, aspect, near, far ) );
 	}
 
 	public void UpdateCamera ( CameraData camera, bool sync = false)
