@@ -54,7 +54,10 @@ public class CameraModule : TransformModule
 
 	public override object GetState ()
 	{
-		return new { camera = Camera };
+		return new { 
+			transform = Transform,
+			camera = Camera 
+		};
 	}
 
 	public override void SetState ( JsonElement state )

@@ -8,6 +8,7 @@ public static class ModuleTypes
         { TransformModule.ModuleType, ( UUID ) => new TransformModule( UUID ) },
         { CameraModule.ModuleType, ( UUID ) => new CameraModule( UUID ) },
         { LineModule.ModuleType, ( UUID ) => new LineModule( UUID ) },
+        { PrimitiveModule.ModuleType, ( UUID ) => new PrimitiveModule( UUID ) },
     };
 
     public static ModuleCore Create(string type, Guid UUID)
