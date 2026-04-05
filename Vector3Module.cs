@@ -2,7 +2,8 @@ using System.Text.Json;
 
 public class Vector3Module : ModuleCore
 {
-	public new static string Type => "Vector3Module";
+	public new static string ModuleType => "Vector3Module";
+	public override string Type => ModuleType;
 	public new static class Commands
 	{
 		public const string setState = ModuleCore.Commands.setState;	

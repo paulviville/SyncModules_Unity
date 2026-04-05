@@ -4,7 +4,9 @@ public record TransformData(double[]? translation, double[]? rotation, double[]?
 
 public class TransformModule : ModuleCore
 {
-	public new static string Type => "TransformModule";
+	public new static string ModuleType => "TransformModule";
+	public override string Type => ModuleType;
+
 	public new static class Commands
 	{
 		public const string setState = ModuleCore.Commands.setState;	
@@ -21,11 +23,11 @@ public class TransformModule : ModuleCore
 		_scale.ToArray( )	
 	);
 
-	public TransformModule ( Guid UUID ) : base ( UUID)
+	public TransformModule ( Guid UUID ) : base ( UUID )
 	{
 		Console.WriteLine( "TransformModule Constructor " + this.UUID );
 		
-		// SetOnCommand( Commands.updateTransform, OnUpdateVector );
+		SetOnCommand( Commands.updateTransform, OnUpdateTransform );
 	}
 
 	private void OnUpdateTransform ( JsonElement data )
@@ -69,7 +71,7 @@ public class TransformModule : ModuleCore
 
 	public new void SetState ( JsonElement state )
 	{
-		Console.WriteLine( "VectorModule - SetState" );
+		Console.WriteLine( "TransformModule - SetState" );
 
 		OnUpdateTransform( state );
 	}

@@ -2,8 +2,9 @@ using System.Text.Json;
 
 public class ModuleCore
 {
-	public static string Type => "ModuleCore";
-
+	public static string ModuleType => "ModuleCore";
+	public virtual string Type => ModuleType;
+	
 	public static class Commands
 	{
 		public const string setState = "SET_STATE";	

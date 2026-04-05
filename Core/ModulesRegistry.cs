@@ -2,7 +2,9 @@ using System.Text.Json;
 
 public class ModulesRegistry : ModuleCore
 {
-	public new static string Type => "ModuleRegistry";
+	public new static string ModuleType => "ModuleRegistry";
+	public override string Type => ModuleType;
+
 	public new static class Commands
 	{
 		public const string setState = ModuleCore.Commands.setState;	

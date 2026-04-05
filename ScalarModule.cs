@@ -2,7 +2,8 @@ using System.Text.Json;
 
 public class ScalarModule : ModuleCore
 {
-	public new static string Type => "ScalarModule";
+	public new static string ModuleType => "ScalarModule";
+	public override string Type => ModuleType;
 	public new static class Commands
 	{
 		public const string setState = ModuleCore.Commands.setState;	
