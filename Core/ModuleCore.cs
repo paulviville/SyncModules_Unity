@@ -4,7 +4,7 @@ public class ModuleCore
 {
 	public static string ModuleType => "ModuleCore";
 	public virtual string Type => ModuleType;
-	
+
 	public static class Commands
 	{
 		public const string setState = "SET_STATE";	
@@ -81,17 +81,17 @@ public class ModuleCore
 		);
 	}
 
-	public object GetState ( )
+	public virtual object GetState ( )
 	{
 		return new { };
 	}
 
-	public void SetState ( JsonElement state )
+	public virtual void SetState ( JsonElement state )
 	{
 		Console.WriteLine( "ModuleCore - SetState" );
 	}
 
-	public void Delete ( )
+	public virtual void Delete ( )
 	{
 		
 	}

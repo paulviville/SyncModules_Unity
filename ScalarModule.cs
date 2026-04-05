@@ -35,12 +35,12 @@ public class ScalarModule : ModuleCore
 			Output( Commands.updateValue, new { value = Value } );
 	}
 
-	public new object GetState ( )
+	public override object GetState ( )
 	{
 		return new { value = Value };
 	}
 
-	public new void SetState ( JsonElement state )
+	public override void SetState ( JsonElement state )
 	{
 		Console.WriteLine( "ScalarModule - SetState" );
 		double value = state.GetProperty( "value" ).GetDouble( );

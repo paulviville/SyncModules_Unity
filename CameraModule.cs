@@ -52,12 +52,12 @@ public class CameraModule : TransformModule
 			Output( Commands.updateCamera, new { camera = Camera } );
 	}
 
-	public new object GetState ()
+	public override object GetState ()
 	{
 		return new { camera = Camera };
 	}
 
-	public new void SetState ( JsonElement state )
+	public override void SetState ( JsonElement state )
 	{
 		Console.WriteLine( "CameraModule - SetState" );
 		base.SetState( state );

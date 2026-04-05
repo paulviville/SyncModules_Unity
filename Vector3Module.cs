@@ -41,12 +41,12 @@ public class Vector3Module : ModuleCore
 		}
 	}
 
-	public new object GetState ( )
+	public override object GetState ( )
 	{
 		return new { vector = Vector };
 	}
 
-	public new void SetState ( JsonElement state )
+	public override void SetState ( JsonElement state )
 	{
 		Console.WriteLine( "VectorModule - SetState" );
 		OnUpdateVector( state );

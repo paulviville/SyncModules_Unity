@@ -80,12 +80,12 @@ public class ModulesRegistry : ModuleCore
    		return module;
 	}
 
-	public new object GetState ( )
+	public override object GetState ( )
 	{
 		return new { };
 	}
 
-	public new void SetState ( JsonElement state )
+	public override void SetState ( JsonElement state )
 	{
 		Console.WriteLine( "ModulesRegistry - SetState" );
 	}

@@ -64,12 +64,12 @@ public class TransformModule : ModuleCore
 			Output( Commands.updateTransform, new { transform = Transform } );
 	}
 
-	public new object GetState ( )
+	public override object GetState ( )
 	{
 		return new { transform = Transform };
 	}
 
-	public new void SetState ( JsonElement state )
+	public override void SetState ( JsonElement state )
 	{
 		Console.WriteLine( "TransformModule - SetState" );
 
