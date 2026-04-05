@@ -12,7 +12,6 @@ public class ModulesRegistry : ModuleCore
 		public const string removeModule = "REMOVE_MODULE";
 	} 
 
-
 	private Dictionary< Guid, ModuleCore > _modules = new (); 
 
 	public ModulesRegistry ( Action<object> outputFn ) :
