@@ -17,6 +17,9 @@ public class PointsModule : ModuleCore
     }
 
 	private Dictionary<Guid, double[]> _points = new ( );
+	public PointData[] Points => _points.Select( kvp => new
+			PointData( kvp.Key, kvp.Value) 
+			).ToArray();
 
 	public PointsModule ( Guid UUID ) : base ( UUID)
 	{
