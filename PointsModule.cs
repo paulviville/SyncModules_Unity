@@ -28,7 +28,6 @@ public class PointsModule : ModuleCore
 		SetOnCommand( Commands.removePoints, OnRemovePoints );
 		SetOnCommand( Commands.updatePoints, OnUpdatePoints );
 		SetOnCommand( Commands.clear, OnClear );
-		
 	}
 
 	private PointData[] ParsePoints( JsonElement data )
@@ -48,9 +47,9 @@ public class PointsModule : ModuleCore
 			.ToArray();
 	}
 
-	private object[] SerializePoints( PointData[] points)
+	private object[] SerializePoints( PointData[] points )
 	{
-		return points.Select(p => (object)new { UUID = p.UUID, position = p.position }).ToArray();
+		return points.Select( p => (object)new { UUID = p.UUID, position = p.position }).ToArray();
 	}
 
 	private void OnAddPoints ( JsonElement data )
@@ -76,9 +75,9 @@ public class PointsModule : ModuleCore
 		Clear( );
 	}
 
-	public void AddPoints ( PointData[] points, bool sync = false)
+	public void AddPoints ( PointData[] points, bool sync = false )
 	{
-		foreach ( var point in points)
+		foreach ( var point in points )
 		{
 			if ( !_points.ContainsKey( point.UUID ) )
 				_points[ point.UUID ] = new double[ 3 ];
@@ -91,7 +90,7 @@ public class PointsModule : ModuleCore
             Output(Commands.addPoints, new { points = SerializePoints( points ) } );
 	}
 
-	public void RemovePoints ( PointData[] points, bool sync = false)
+	public void RemovePoints ( PointData[] points, bool sync = false )
     {
         foreach (var point in points )
 			if ( _points.ContainsKey( point.UUID ) )
@@ -103,7 +102,7 @@ public class PointsModule : ModuleCore
             Output(Commands.removePoints, new { points = SerializePoints( points ) });
     }
 
-	public void UpdatePoints ( PointData[] points, bool sync = false)
+	public void UpdatePoints ( PointData[] points, bool sync = false )
 	{
 		foreach ( var point in points )
 		{
@@ -117,7 +116,7 @@ public class PointsModule : ModuleCore
 	}
 
 
-	public void Clear ( bool sync = false)
+	public void Clear ( bool sync = false )
 	{
 		_points.Clear( );
 
@@ -137,7 +136,7 @@ public class PointsModule : ModuleCore
 		};
 	}
 
-	public override void SetState(JsonElement state)
+	public override void SetState( JsonElement state )
 	{
 		_points.Clear( );
 		OnAddPoints( state );
