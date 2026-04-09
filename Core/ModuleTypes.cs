@@ -12,6 +12,7 @@ public static class ModuleTypes
         { CameraModule.ModuleType, ( UUID ) => new CameraModule( UUID ) },
         { LineModule.ModuleType, ( UUID ) => new LineModule( UUID ) },
         { PrimitiveModule.ModuleType, ( UUID ) => new PrimitiveModule( UUID ) },
+        { PointsModule.ModuleType, ( UUID ) => new PointsModule( UUID ) },
     };
 
     public static ModuleCore Create(string type, Guid UUID)
