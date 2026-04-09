@@ -1,6 +1,19 @@
-using System.Text.Json;
+#nullable enable
+using System;
+using System.Linq;
 
-public record TransformData(double[]? translation, double[]? rotation, double[]? scale);
+public class TransformData
+{
+    public double[]? translation { get; }
+    public double[]? rotation    { get; }
+    public double[]? scale       { get; }
+    public TransformData(double[]? translation = null, double[]? rotation = null, double[]? scale = null)
+    {
+        this.translation = translation;
+        this.rotation = rotation;
+        this.scale = scale;
+    }
+}
 
 public class TransformModule : ModuleCore
 {
@@ -25,25 +38,23 @@ public class TransformModule : ModuleCore
 
 	public TransformModule ( Guid UUID ) : base ( UUID )
 	{
-		Console.WriteLine( "TransformModule Constructor " + this.UUID );
-		
 		SetOnCommand( Commands.updateTransform, OnUpdateTransform );
 	}
 
-	private void OnUpdateTransform ( JsonElement data )
+	private void OnUpdateTransform ( IPayload data )
 	{
-		var transform = data.GetProperty("transform");
+		var transform = data.GetPayload("transform");
 
-		double[]? translation = transform.TryGetProperty("translation", out var t)
-			? t.EnumerateArray().Select(e => e.GetDouble()).ToArray()
+		double[]? translation = transform.HasProperty("translation")
+			? transform.GetDoubleArray("translation")
 			: null;
-
-		double[]? rotation = transform.TryGetProperty("rotation", out var r)
-			? r.EnumerateArray().Select(e => e.GetDouble()).ToArray()
+			
+		double[]? rotation = transform.HasProperty("rotation")
+			? transform.GetDoubleArray("rotation")
 			: null;
-
-		double[]? scale = transform.TryGetProperty("scale", out var s)
-			? s.EnumerateArray().Select(e => e.GetDouble()).ToArray()
+			
+		double[]? scale = transform.HasProperty("scale")
+			? transform.GetDoubleArray("scale")
 			: null;
 
 		UpdateTransform( new TransformData( translation, rotation, scale ) );
@@ -69,10 +80,8 @@ public class TransformModule : ModuleCore
 		return new { transform = Transform };
 	}
 
-	public override void SetState ( JsonElement state )
+	public override void SetState ( IPayload state )
 	{
-		Console.WriteLine( "TransformModule - SetState" );
-
 		OnUpdateTransform( state );
 	}
 }

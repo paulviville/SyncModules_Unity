@@ -1,4 +1,7 @@
-using System.Text.Json;
+#nullable enable
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public class ModulesRegistry : ModuleCore
 {
@@ -17,25 +20,23 @@ public class ModulesRegistry : ModuleCore
 	public ModulesRegistry ( Action<object> outputFn ) :
 		base ( new Guid( "00000000-0000-0000-0000-000000000000" ) )
 	{
-		Console.WriteLine( "ModulesRegistry Constructor " + this.UUID );
-		
 		SetOutputFn( outputFn );
 
 		SetOnCommand( Commands.addModule, OnAddModule );
 		SetOnCommand( Commands.removeModule, OnRemoveModule );
 	}
 
-	private void OnAddModule ( JsonElement data )
+	private void OnAddModule ( IPayload data )
 	{
-		string type = data.GetProperty( "type" ).GetString( )!;
-		Guid UUID = data.GetProperty( "UUID" ).GetGuid( );
+		string type = data.GetString( "type" )!;
+		Guid UUID = data.GetGuid( "UUID" );
 
 		AddModule( type, UUID );
 	}
 
-	private void OnRemoveModule ( JsonElement data )
+	private void OnRemoveModule ( IPayload data )
 	{
-		Guid UUID = data.GetProperty( "UUID" ).GetGuid( );
+		Guid UUID = data.GetGuid( "UUID" );
 
 		RemoveModule( UUID );
 	}
@@ -85,9 +86,8 @@ public class ModulesRegistry : ModuleCore
 		/// TODO
 	}
 
-	public override void SetState ( JsonElement state )
+	public override void SetState ( IPayload state )
 	{
-		Console.WriteLine( "ModulesRegistry - SetState" );
 		/// TODO
 	}
 }

@@ -1,4 +1,6 @@
-using System.Text.Json;
+#nullable enable
+using System;
+using System.Linq;
 
 public class Vector3Module : ModuleCore
 {
@@ -15,18 +17,14 @@ public class Vector3Module : ModuleCore
 
 	public Vector3Module ( Guid UUID ) : base ( UUID)
 	{
-		Console.WriteLine( "Vector3Module Constructor " + this.UUID );
-		
 		SetOnCommand( Commands.updateVector, OnUpdateVector );
 	}
 
-	private void OnUpdateVector ( JsonElement data )
+	private void OnUpdateVector ( IPayload data )
 	{
-		double[] vector = data.GetProperty("vector")
-                             .EnumerateArray()
-                             .Select(e => e.GetDouble( )) 
-                             .ToArray( );
-        UpdateVector(vector);
+		double[]? vector = data.GetDoubleArray("vector");
+		if ( vector != null )
+	        UpdateVector( vector );
 	} 
 
 	public void UpdateVector ( double[] vector, bool sync = false)
@@ -46,9 +44,8 @@ public class Vector3Module : ModuleCore
 		return new { vector = Vector };
 	}
 
-	public override void SetState ( JsonElement state )
+	public override void SetState ( IPayload state )
 	{
-		Console.WriteLine( "VectorModule - SetState" );
 		OnUpdateVector( state );
 	}
 }

@@ -1,4 +1,7 @@
-// ModuleTypes.cs
+#nullable enable
+using System;
+using System.Collections.Generic;
+
 public static class ModuleTypes
 {
     private static readonly Dictionary<string, Func<Guid, ModuleCore>> _types = new()

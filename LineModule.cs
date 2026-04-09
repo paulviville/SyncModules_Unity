@@ -1,6 +1,17 @@
-using System.Text.Json;
+#nullable enable
+using System;
+using System.Linq;
 
-public record LineData ( double[]? origin, double[]? end );
+public class LineData
+{
+    public double[]? origin { get; }
+    public double[]? end    { get; }
+    public LineData(double[]? origin = null, double[]? end = null)
+    {
+        this.origin = origin;
+        this.end = end;
+    }
+}
 
 public class LineModule : ModuleCore
 {
@@ -23,18 +34,17 @@ public class LineModule : ModuleCore
 
 	public LineModule ( Guid UUID ) : base ( UUID)
 	{
-		Console.WriteLine( "LineModule Constructor " + this.UUID );
 		SetOnCommand( Commands.updateLine, OnUpdateLine );
 	}
 
-	private void OnUpdateLine ( JsonElement data )
+	private void OnUpdateLine ( IPayload data )
 	{
-		var line = data.GetProperty( "line" );
-		double[]? origin = line.TryGetProperty("origin", out var or)
-			? or.EnumerateArray().Select(e => e.GetDouble()).ToArray()
+		var line = data.GetPayload( "line" );
+		double[]? origin = line.HasProperty("origin")
+			? line.GetDoubleArray("origin")
 			: null;
-		double[]? end = line.TryGetProperty("end", out var en)
-			? en.EnumerateArray().Select(e => e.GetDouble()).ToArray()
+		double[]? end = line.HasProperty("end")
+			? line.GetDoubleArray("end")
 			: null;
 
 		UpdateLine( new LineData( origin, end ) );
@@ -57,9 +67,8 @@ public class LineModule : ModuleCore
 		return new { line = Line };
 	}
 
-	public override void SetState ( JsonElement state )
+	public override void SetState ( IPayload state )
 	{
-		Console.WriteLine( "LineModule - SetState" );
 		OnUpdateLine( state );
 	}
 }

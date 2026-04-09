@@ -1,4 +1,5 @@
-using System.Text.Json;
+#nullable enable
+using System;
 
 public class PrimitiveModule : TransformModule
 {
@@ -23,13 +24,12 @@ public class PrimitiveModule : TransformModule
 
 	public PrimitiveModule ( Guid UUID ) : base ( UUID)
 	{
-		Console.WriteLine( "PrimitiveModule Constructor " + this.UUID );
-		
+		SetOnCommand( Commands.updatePrimitive, OnUpdatePrimitive );
 	}
 
-	private void OnUpdatePrimitive ( JsonElement data )
+	private void OnUpdatePrimitive ( IPayload data )
 	{
-		string primitive = data.GetProperty( "type" ).GetString( )!;
+		string primitive = data.GetString( "type" )!;
 		UpdatePrimitive( primitive );
 	}
 
@@ -52,9 +52,8 @@ public class PrimitiveModule : TransformModule
 		};
 	}
 
-	public override void SetState ( JsonElement state )
+	public override void SetState ( IPayload state )
 	{
-		Console.WriteLine( "PrimitiveModule - SetState" );
 		base.SetState( state );
 		OnUpdatePrimitive( state );
 	}

@@ -1,4 +1,5 @@
-using System.Text.Json;
+#nullable enable
+using System;
 
 public class ScalarModule : ModuleCore
 {
@@ -15,13 +16,12 @@ public class ScalarModule : ModuleCore
 
 	public ScalarModule ( Guid UUID ) : base ( UUID)
 	{
-		Console.WriteLine( "ScalarModule Constructor " + this.UUID );
 		SetOnCommand( Commands.updateValue, OnUpdateValue );
 	}
 
-	private void OnUpdateValue ( JsonElement data )
+	private void OnUpdateValue ( IPayload data )
 	{
-		double value = data.GetProperty( "value" ).GetDouble( );
+		double value = data.GetDouble( "value" );
 		UpdateValue( value );
 	}
 
@@ -40,10 +40,9 @@ public class ScalarModule : ModuleCore
 		return new { value = Value };
 	}
 
-	public override void SetState ( JsonElement state )
+	public override void SetState ( IPayload state )
 	{
-		Console.WriteLine( "ScalarModule - SetState" );
-		double value = state.GetProperty( "value" ).GetDouble( );
+		double value = state.GetDouble( "value" );
 		UpdateValue( value );
 	}
 }

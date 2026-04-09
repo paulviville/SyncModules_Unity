@@ -1,8 +1,21 @@
+#nullable enable
+using System;
 
-using System.Text.Json;
-
-public record CameraData ( double? fov, double? aspect, double? near, double? far );
-
+// public record CameraData ( double? fov, double? aspect, double? near, double? far );
+public class CameraData
+{
+    public double? fov { get; }
+    public double? aspect { get; }
+    public double? near { get; }
+    public double? far { get; }
+    public CameraData(double? fov = null, double? aspect = null,double? near = null,double? far = null )
+    {
+        this.fov = fov;
+        this.aspect = aspect;
+        this.near = near;
+        this.far = far;
+    }
+}
 public class CameraModule : TransformModule
 {
 	public new static string ModuleType => "CameraModule";
@@ -24,16 +37,16 @@ public class CameraModule : TransformModule
 
 	public CameraModule ( Guid UUID ) : base ( UUID)
 	{
-		Console.WriteLine( "CameraModule Constructor " + this.UUID );
 		SetOnCommand( Commands.updateCamera, OnUpdateCamera );
 	}
 
-	private void OnUpdateCamera ( JsonElement data )
+	private void OnUpdateCamera ( IPayload data )
 	{
-		double? fov = data.TryGetProperty("fov", out var f) ? f.GetDouble() : null;
-		double? aspect = data.TryGetProperty("aspect", out var a) ? a.GetDouble() : null;
-		double? near = data.TryGetProperty("near", out var n) ? n.GetDouble() : null;
-		double? far = data.TryGetProperty("far", out var ff) ? ff.GetDouble() : null;
+		var camera = data.GetPayload("camera");
+		double? fov = camera.HasProperty("fov") ? camera.GetDouble("fov") : null;
+		double? aspect = camera.HasProperty("aspect") ? camera.GetDouble("aspect") : null;
+		double? near = camera.HasProperty("near") ? camera.GetDouble("near") : null;
+		double? far = camera.HasProperty("far") ? camera.GetDouble("far") : null;
 	
 		UpdateCamera( new CameraData( fov, aspect, near, far ) );
 	}
@@ -62,9 +75,8 @@ public class CameraModule : TransformModule
 		};
 	}
 
-	public override void SetState ( JsonElement state )
+	public override void SetState ( IPayload state )
 	{
-		Console.WriteLine( "CameraModule - SetState" );
 		base.SetState( state );
 		OnUpdateCamera( state );
 	}

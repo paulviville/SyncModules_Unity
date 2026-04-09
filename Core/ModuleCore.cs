@@ -1,5 +1,6 @@
-using System.Text.Json;
-
+#nullable enable
+using System;
+using System.Collections.Generic;
 public class ModuleCore
 {
 	public static string ModuleType => "ModuleCore";
@@ -15,13 +16,13 @@ public class ModuleCore
 	public Guid UUID => _UUID;
 
 	protected Action<object>? _outputFn;
-	private Dictionary<string, List<Action<JsonElement>>> _commandCallbacks = new ( );
+	private Dictionary<string, List<Action<IPayload>>> _commandCallbacks = new ( );
 	private Dictionary<string, List<Action<object>>> _changeCallbacks = new ( );
 
 
 	public ModuleCore( Guid UUID )
 	{
-		Console.WriteLine( "ModuleCore Constructor " + UUID );
+		// Console.WriteLine( "ModuleCore Constructor " + UUID );
 		_UUID = UUID;
 
 		SetOnCommand( Commands.setState, SetState );
@@ -32,20 +33,27 @@ public class ModuleCore
 		_outputFn = outputFn;
 	}
 
-	public void Input ( JsonElement payload )
+	public void Input ( IPayload payload )
 	{
-		string command = payload.GetProperty( "command" ).GetString( )!;
-		JsonElement data = payload.GetProperty( "data" );
+		string command = payload.GetString( "command" )!;
+		IPayload data = payload.GetPayload( "data" );
 
 		OnCommand( command, data );
 	}
 
 	public void Output ( string command, object data )
 	{
-		Console.WriteLine( command + " " + JsonSerializer.Serialize(data) );
+		var payload = new
+		{
+			moduleUUID = UUID,
+			command,
+			data
+		};
+		if( _outputFn != null )
+			_outputFn( payload );
 	}
 
-	protected void SetOnCommand ( string command, Action<JsonElement> callback)
+	protected void SetOnCommand ( string command, Action<IPayload> callback)
 	{
 		if ( !_commandCallbacks.ContainsKey( command ))
 			_commandCallbacks[ command ] = new ( );
@@ -53,7 +61,7 @@ public class ModuleCore
 		_commandCallbacks[ command ].Add( callback );
 	}
 
-	protected void OnCommand ( string command, JsonElement data)
+	protected void OnCommand ( string command, IPayload data)
 	{
 		if ( !_commandCallbacks.ContainsKey( command ))
 			return;
@@ -63,7 +71,7 @@ public class ModuleCore
 		);
 	}
 
-	protected void SetOnChange ( string change, Action<object> callback)
+	public void SetOnChange ( string change, Action<object> callback)
 	{
 		if ( !_changeCallbacks.ContainsKey( change ))
 			_changeCallbacks[ change ] = new ( );
@@ -86,9 +94,9 @@ public class ModuleCore
 		return new { };
 	}
 
-	public virtual void SetState ( JsonElement state )
+	public virtual void SetState ( IPayload state )
 	{
-		Console.WriteLine( "ModuleCore - SetState" );
+		
 	}
 
 	public virtual void Delete ( )
