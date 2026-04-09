@@ -1,6 +1,20 @@
-using System.Text.Json;
+#nullable enable
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-public record PointData ( Guid UUID, double[]? position );
+public class PointData
+{
+    public double[]? position { get; }
+	public Guid UUID { get; }
+
+	public PointData( Guid UUID, double[]? position)
+	{
+		this.position = position;
+		this.UUID = UUID;
+	}
+	
+}
 
 public class PointsModule : ModuleCore
 {
@@ -30,17 +44,15 @@ public class PointsModule : ModuleCore
 		SetOnCommand( Commands.clear, OnClear );
 	}
 
-	private PointData[] ParsePoints( JsonElement data )
+	private PointData[] ParsePoints( IPayload data )
 	{
-		return data.GetProperty("points")
-			.EnumerateArray()
+		return data.GetArray("points")
 			.Select(p =>
 			{
-				Guid uuid = Guid.Parse(p.GetProperty("UUID").GetString()!);
-
-				double[]? position = p.TryGetProperty("position", out var pos)
-				? pos.EnumerateArray().Select(e => e.GetDouble()).ToArray()
-				: null;
+				Guid uuid = p.GetGuid("UUID");
+				double[]? position = p.HasProperty("position")
+                       ? p.GetDoubleArray("position")
+                       : null;
 
 				return new PointData(uuid, position);
 			})
@@ -52,25 +64,25 @@ public class PointsModule : ModuleCore
 		return points.Select( p => (object)new { UUID = p.UUID, position = p.position }).ToArray();
 	}
 
-	private void OnAddPoints ( JsonElement data )
+	private void OnAddPoints ( IPayload data )
 	{
 		PointData[] points = ParsePoints( data );
 		AddPoints( points );
 	}
 	
-	private void OnRemovePoints ( JsonElement data )
+	private void OnRemovePoints ( IPayload data )
 	{
 		PointData[] points = ParsePoints( data );
 		RemovePoints( points );
 	}
 
-	private void OnUpdatePoints ( JsonElement data )
+	private void OnUpdatePoints ( IPayload data )
 	{
 		PointData[] points = ParsePoints( data );
 		UpdatePoints( points );
 	}
 
-	private void OnClear ( JsonElement data )
+	private void OnClear ( IPayload data )
 	{
 		Clear( );
 	}
@@ -136,7 +148,7 @@ public class PointsModule : ModuleCore
 		};
 	}
 
-	public override void SetState( JsonElement state )
+	public override void SetState( IPayload state )
 	{
 		_points.Clear( );
 		OnAddPoints( state );
